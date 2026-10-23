@@ -1,0 +1,27 @@
+{
+  "name": "mario2d-paper-world",
+  "version": "2.0.0",
+  "description": "Super Mario 2.5D World — Édition Paper & 3D. Jeu HTML5 modulaire (Three.js r128 + ES Modules).",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "start": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/serve.mjs --dir dist",
+    "check": "node scripts/check-project.mjs",
+    "test": "node scripts/run-tests.mjs",
+    "test:e2e": "node tests/e2e/smoke.mjs",
+    "verify": "npm run check && npm test && npm run build"
+  },
+  "dependencies": {
+    "three": "0.128.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0",
+    "playwright": "^1.56.0"
+  }
+}
