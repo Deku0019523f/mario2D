@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#38bdf8">
+    <meta name="description" content="Super Mario 2.5D World — jeu de plateforme Paper & 3D jouable au clavier, à la manette et au tactile.">
+    <title>Super Mario 2.5D World - Édition Paper & 3D</title>
+
+    <!-- Polices (optionnelles) : si le réseau est coupé, les polices de secours de base.css prennent le relais -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <!-- Feuilles de style (remplacent le CDN Tailwind de la version d'origine) -->
+    <link rel="stylesheet" href="./src/styles/main.css">
+
+    <!-- Three.js r128 (npm: three@0.128.0). Le build de production (npm run build) embarque three dans le bundle. -->
+    <script type="importmap">
+    { "imports": { "three": "./node_modules/three/build/three.module.js" } }
+    </script>
+</head>
+<body>
+
+    <!-- Canvas 3D Three.js -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- Conteneur des textes flottants (+100, SUPER!, 1UP) -->
+    <div id="floating-container" class="floating-layer"></div>
+
+    <!-- Erreur de démarrage (WebGL indisponible, module introuvable…) -->
+    <div id="boot-error" class="boot-error hidden" role="alert"></div>
+
+    <noscript>
+        <div class="boot-error">JavaScript est requis pour jouer à Super Mario 2.5D World.</div>
+    </noscript>
+
+    <!-- Couche Interface Utilisateur -->
+    <div class="ui-layer">
+
+        <!-- BARRE SUPÉRIEURE (HUD) -->
+        <div class="hud">
+            <!-- Gauche : Vies, État Champignon, Pièces -->
+            <div class="hud-group">
+                <!-- Vies -->
+                <div class="hud-box">
+                    <span class="hud-icon">🧢</span>
+                    <div>
+                        <div class="hud-label tone-rose-300">Vies</div>
+                        <div id="hud-lives" class="hud-value">x3</div>
+                    </div>
+                </div>
+
+                <!-- Statut du joueur (Petit / Super Champignon) -->
+                <div id="hud-power-badge" class="hud-box hud-power">
+                    <span id="hud-power-icon" class="hud-icon">👦</span>
+                    <div>
+                        <div class="hud-label tone-sky-300">État</div>
+                        <div id="hud-power-text" class="hud-value hud-power-text">PETIT</div>
+                    </div>
+                </div>
+
+                <!-- Pièces -->
+                <div class="hud-box">
+                    <span class="hud-icon">🪙</span>
+                    <div>
+                        <div class="hud-label tone-amber-300">Pièces</div>
+                        <div id="hud-coins" class="hud-value tone-amber-400">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Centre : Progression jusqu'au Drapeau -->
+            <div class="hud-box hud-progress">
+                <div class="hud-progress-head">
+                    <span class="tone-emerald-300">Monde <span id="hud-level">1-1</span></span>
+                    <span id="hud-progress-pct" class="tone-amber-300">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div id="hud-progress-bar" class="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Droite : Score, Record & Boutons Pause / Audio -->
+            <div class="hud-group">
+                <div class="hud-box hud-score">
+                    <div class="hud-label tone-sky-300">Score <span class="tone-amber-300 hud-best-wrap">(Max: <span id="hud-best">0</span>)</span></div>
+                    <div id="hud-score" class="hud-value hud-score-value">000000</div>
+                </div>
+
+                <button id="btn-pause" class="interactive hud-box icon-btn" type="button" title="Pause (Échap / P)" aria-label="Pause">
+                    <span class="hud-icon">⏸</span>
+                </button>
+
+                <button id="btn-sound" class="interactive hud-box icon-btn" type="button" title="Activer / Couper le son 8-bit" aria-label="Activer ou couper le son">
+                    <span id="sound-icon" class="hud-icon">🔊</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ZONE CENTRALE : MENUS (DÉMARRAGE / PAUSE / VICTOIRE / GAME OVER) -->
+        <div class="menu-zone">
+
+            <!-- Écran d'Accueil / Pause / Fin -->
+            <div id="modal-screen" class="interactive mario-card" role="dialog" aria-labelledby="modal-title">
+                <div id="modal-badge" class="menu-badge">
+                    🍄 Édition 2.5D Paper Sprite
+                </div>
+
+                <h1 id="modal-title" class="retro-font menu-title">
+                    SUPER MARIO 2.5D
+                </h1>
+
+                <p id="modal-subtitle" class="menu-subtitle">
+                    Frappez les blocs <b>"?"</b> par en dessous pour faire surgir des <b>Super Champignons</b>, écrasez les Goombas &amp; Koopas 2D et hissez-vous au sommet du drapeau !
+                </p>
+
+                <!-- Aperçu visuel des nouveautés intégrées -->
+                <div class="feature-grid">
+                    <div class="feature">
+                        <span class="feature-emoji">🏃‍♂️</span>
+                        <span class="feature-name tone-amber-300">Avatar 2D</span>
+                        <span class="feature-desc">Animé &amp; Flip</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-emoji">🍄</span>
+                        <span class="feature-name tone-rose-400">Super Champi</span>
+                        <span class="feature-desc">Taille x1.45 + Force</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-emoji">🐢</span>
+                        <span class="feature-name tone-emerald-400">Ennemis 2D</span>
+                        <span class="feature-desc">Goomba &amp; Koopa</span>
+                    </div>
+                </div>
+
+                <!-- Statistiques de fin de partie (affichées en Game Over / Victoire) -->
+                <div id="modal-stats" class="stats-grid hidden">
+                    <div>
+                        <div class="stat-label">Score</div>
+                        <div id="stat-final-score" class="stat-value">0</div>
+                    </div>
+                    <div>
+                        <div class="stat-label">Pièces</div>
+                        <div id="stat-final-coins" class="stat-value tone-amber-400">0</div>
+                    </div>
+                    <div>
+                        <div class="stat-label">Record</div>
+                        <div id="stat-final-best" class="stat-value tone-emerald-400">0</div>
+                    </div>
+                </div>
+
+                <!-- Aide Contrôles -->
+                <div class="help-box">
+                    <div>⌨️ <b>Clavier :</b> Flèches / Q-D + Espace (Échap = pause)</div>
+                    <div>📱 <b>Mobile :</b> Boutons Tactiles ◄ ► et SAUT</div>
+                </div>
+
+                <div class="menu-actions">
+                    <button id="btn-resume" class="hidden mario-btn mario-btn-blue" type="button">
+                        ▶️ Reprendre
+                    </button>
+                    <button id="btn-play" class="mario-btn mario-btn-red" type="button">
+                        🎮 Jouer le Monde 1-1
+                    </button>
+                    <button id="btn-next-level" class="hidden mario-btn mario-btn-green" type="button">
+                        🚩 Niveau Suivant
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- CONTRÔLES TACTILES HYBRIDES (BAS D'ÉCRAN) -->
+        <div id="touch-controls" class="touch-controls">
+            <!-- Croix directionnelle Gauche / Droite -->
+            <div id="touch-dpad" class="touch-dpad">
+                <button id="btn-left" class="interactive touch-pad-btn" type="button" aria-label="Gauche">◄</button>
+                <button id="btn-right" class="interactive touch-pad-btn" type="button" aria-label="Droite">►</button>
+            </div>
+
+            <!-- Indicateur central discret sur grand écran -->
+            <div class="touch-hint">
+                <span>🍄 Frappez les blocs <b>?</b> par en dessous !</span>
+            </div>
+
+            <!-- Bouton de Saut -->
+            <div>
+                <button id="btn-jump" class="interactive jump-pad-btn" type="button" aria-label="Sauter">
+                    <span class="jump-arrow">▲</span>
+                    <span class="jump-label">SAUT</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
+</body>
+</html>
