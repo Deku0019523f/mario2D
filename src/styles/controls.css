@@ -1,0 +1,120 @@
+/* ==========================================================
+   CONTRÔLES TACTILES : croix ◄ ► et bouton de saut
+   ========================================================== */
+
+.touch-controls {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-shrink: 0;
+    padding: 0 4px 4px;
+    /* Le conteneur ne bloque pas les clics sur le canvas : seuls les boutons captent les doigts */
+}
+
+.touch-dpad {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Zone de glisser-déposer entre ◄ et ► : empêche le scroll / zoom du navigateur */
+    touch-action: none;
+}
+
+.touch-pad-btn,
+.jump-pad-btn {
+    touch-action: none;
+    -webkit-touch-callout: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.touch-pad-btn {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    font-size: 24px;
+    font-weight: 900;
+    color: #fff;
+    background: rgba(15, 23, 42, 0.62);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 3px solid rgba(255, 255, 255, 0.45);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    transition: transform 0.08s ease, background 0.12s ease;
+}
+.touch-pad-btn.active,
+.touch-pad-btn:active {
+    background: rgba(250, 204, 21, 0.85);
+    border-color: #ffffff;
+    color: #0f172a;
+    transform: scale(0.92);
+}
+
+.jump-pad-btn {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 900;
+    color: #fff;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.85), rgba(185, 28, 28, 0.85));
+    border: 3px solid rgba(255, 255, 255, 0.65);
+    box-shadow: 0 10px 25px rgba(220, 38, 38, 0.5);
+}
+.jump-pad-btn.active,
+.jump-pad-btn:active {
+    background: linear-gradient(135deg, #facc15, #eab308);
+    color: #0f172a;
+    transform: scale(0.92);
+}
+.jump-arrow {
+    font-size: 20px;
+    line-height: 1;
+}
+.jump-label {
+    margin-top: 2px;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* Indicateur central (grands écrans uniquement) */
+.touch-hint {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+@media (min-width: 640px) {
+    .touch-controls { padding: 0 12px 8px; }
+    .touch-dpad { gap: 12px; }
+    .touch-pad-btn { width: 80px; height: 80px; font-size: 30px; }
+    .jump-pad-btn { width: 96px; height: 96px; }
+    .jump-arrow { font-size: 24px; }
+    .jump-label { font-size: 12px; }
+}
+
+@media (min-width: 1024px) {
+    .touch-hint { display: flex; }
+}
+
+/* Petits écrans en paysage : boutons plus compacts pour dégager la vue */
+@media (max-height: 480px) {
+    .touch-pad-btn { width: 56px; height: 56px; font-size: 22px; }
+    .jump-pad-btn { width: 68px; height: 68px; }
+}

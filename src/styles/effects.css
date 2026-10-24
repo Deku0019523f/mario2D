@@ -1,0 +1,29 @@
+/* ==========================================================
+   EFFETS : textes flottants (+100, SUPER MARIO !, 💔 -1 Vie…)
+   ========================================================== */
+
+@keyframes popFloat {
+    0% { opacity: 1; transform: translateY(0) scale(0.8); }
+    40% { transform: translateY(-18px) scale(1.12); }
+    100% { opacity: 0; transform: translateY(-42px) scale(0.95); }
+}
+
+.floating-score {
+    position: fixed;
+    pointer-events: none;
+    font-size: 16px;
+    font-weight: 900;
+    white-space: nowrap;
+    filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.85));
+    animation: popFloat 0.95s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (min-width: 640px) {
+    .floating-score { font-size: 20px; }
+}
+
+/* Respecte la préférence « réduire les animations » */
+@media (prefers-reduced-motion: reduce) {
+    .floating-score { animation-duration: 0.4s; }
+    .progress-fill, .hud-power { transition: none; }
+}
