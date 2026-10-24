@@ -69,7 +69,7 @@ Voir `plan.md` (arborescence détaillée) et `docs/ARCHITECTURE.md` (conception,
 
 ## Limites connues
 
-Voir `docs/TEST-REPORT.md` § Limites : pas de test sur appareil Android physique, build avec esbuild (et non Vite), un seul niveau (le « Niveau suivant » rejoue la même disposition, comme l'original).
+Le fichier d'origine `legacy/Super Mario 2.5D World.original.html` est présent dans le ZIP mais **pas sur GitHub** : sans lui, les 6 tests de parité sont *ignorés* (affichés « skipped », jamais validés à tort) ; recopiez-le dans `legacy/` pour les exécuter. Voir `docs/TEST-REPORT.md` § Limites : pas de test sur appareil Android physique, build avec esbuild (et non Vite), un seul niveau (le « Niveau suivant » rejoue la même disposition, comme l'original).
 
 ## Licence / origine
 

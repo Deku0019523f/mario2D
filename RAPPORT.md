@@ -1,6 +1,6 @@
 # RAPPORT.md — Mémoire du projet
 
-_Dernière mise à jour : 2026-10-23_
+_Dernière mise à jour : 2026-10-24_
 
 ## Objectif
 Refactoriser « Super Mario 2.5D World » (fichier HTML unique, 2388 lignes, Three.js r128) en projet modulaire exécutable, en conservant 100 % du gameplay, en améliorant le rendu 2.5D « Paper Mario » et en garantissant PC + Android. Dépôt cible : https://github.com/Deku0019523f/mario2D
@@ -42,7 +42,7 @@ Aucune.
 
 ## État actuel
 - `npm run check` OK (80 fichiers) ; `npm test` 105/105 ; e2e 29/29 (sources et dist) ; build OK.
-- Documentation et ZIP livrés ; push GitHub via MCP (voir CHANGELOG / dépôt).
+- Documentation et ZIP livrés ; push GitHub via MCP : tout le code, les tests et la doc sont sur `main` (empreintes vérifiées identiques au local). Non poussés : `legacy/` (fichier d'origine de 100 Ko, ignoré proprement par les tests s'il est absent) et `docs/screenshots/*.png` (binaires) — présents dans le ZIP.
 
 ## Prochaines étapes
 Tester sur Android réel (`npm run dev`, adresse réseau local), générer le lockfile, ajouter un niveau 2, déploiement statique de `dist/`.

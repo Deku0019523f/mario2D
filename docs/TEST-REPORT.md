@@ -46,3 +46,4 @@ Réussi : `dist/assets/main-*.js` ≈ 560 Ko (three.js inclus, minifié), `style
 - Les polices Google Fonts n'ont pas pu être chargées dans l'environnement (réseau bloqué) ; le rendu avec polices de repli est celui testé.
 - Pas de comparaison visuelle automatisée avec l'original (la non-régression porte sur la logique de jeu, pas sur les pixels).
 - Safari/iOS et Firefox non testés (seul Chromium l'a été).
+- Le fichier d'origine (`legacy/`) et les captures PNG ne sont **pas** sur GitHub (envoi par l'outil MCP limité au texte, fichier de 100 Ko) mais figurent dans le ZIP. Sans `legacy/`, les 6 tests de parité sont *ignorés* (« skipped ») : le compte « 105 tests » suppose ce fichier présent.

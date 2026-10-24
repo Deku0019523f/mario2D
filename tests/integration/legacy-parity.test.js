@@ -5,11 +5,17 @@
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { createLockstep, createBot, EPS } from '../helpers/lockstep.js';
+import { LEGACY_PATH } from '../helpers/legacy-harness.js';
+
+// Le fichier d'origine (jeu monolithique) est requis pour ces comparaisons. S'il est absent
+// (dépôt cloné sans `legacy/`), les tests sont explicitement IGNORÉS, jamais validés à tort.
+const SKIP = fs.existsSync(LEGACY_PATH) ? false : `fichier d'origine absent : ${LEGACY_PATH}`;
 
 const near = (a, b, msg) => assert.ok(Math.abs(a - b) <= EPS, `${msg}: ${a} != ${b}`);
 
-test('le niveau 1 est identique à l\'original (colliders, blocs, pièces, ennemis, drapeau)', () => {
+test('le niveau 1 est identique à l\'original (colliders, blocs, pièces, ennemis, drapeau)', { skip: SKIP }, () => {
     const ls = createLockstep();
     const { L } = ls;
     const world = ls.game.world;
@@ -54,7 +60,7 @@ test('le niveau 1 est identique à l\'original (colliders, blocs, pièces, ennem
     near(world.levelLength, L.game.levelLength, 'longueur du niveau');
 });
 
-test('partie jouée par un robot pendant 90 s (pas de 1/64 s) : trajectoire, score, vies et entités identiques image par image', () => {
+test('partie jouée par un robot pendant 90 s (pas de 1/64 s) : trajectoire, score, vies et entités identiques image par image', { skip: SKIP }, () => {
     const ls = createLockstep();
     const bot = createBot();
     ls.start();
@@ -93,7 +99,7 @@ test('partie jouée par un robot pendant 90 s (pas de 1/64 s) : trajectoire, sco
     console.log(`  ↳ ${ls.frame} frames comparées, ${restarts} redémarrage(s), états vus :`, JSON.stringify(seen));
 });
 
-test('bloc "?" -> Super Champignon -> brique fracassée : identiques à l\'original', () => {
+test('bloc "?" -> Super Champignon -> brique fracassée : identiques à l\'original', { skip: SKIP }, () => {
     const ls = createLockstep();
     ls.start();
     ls.teleport(10.45, 0); // pile sous le premier bloc "?" (contenu : champignon)
@@ -143,7 +149,7 @@ test('bloc "?" -> Super Champignon -> brique fracassée : identiques à l\'origi
     assert.ok(smashed, 'une brique doit avoir été fracassée en mode Super');
 });
 
-test('victoire : drapeau, animation de marche, +2000, puis niveau suivant (garde le Super Champignon)', () => {
+test('victoire : drapeau, animation de marche, +2000, puis niveau suivant (garde le Super Champignon)', { skip: SKIP }, () => {
     const ls = createLockstep();
     ls.start();
     // On devient Super dans les deux versions avant d'atteindre le drapeau
@@ -179,7 +185,7 @@ test('victoire : drapeau, animation de marche, +2000, puis niveau suivant (garde
     }
 });
 
-test('chute dans un ravin : perte de vie puis Game Over identiques', () => {
+test('chute dans un ravin : perte de vie puis Game Over identiques', { skip: SKIP }, () => {
     const ls = createLockstep();
     ls.start();
     for (let life = 0; life < 3; life++) {
@@ -199,7 +205,7 @@ test('chute dans un ravin : perte de vie puis Game Over identiques', () => {
     assert.equal(ls.game.lives.lives, 0);
 });
 
-test('dégâts : un Super rétrécit, un petit perd une vie, invincibilité temporaire identiques', () => {
+test('dégâts : un Super rétrécit, un petit perd une vie, invincibilité temporaire identiques', { skip: SKIP }, () => {
     const ls = createLockstep();
     ls.start();
     // Super dans les deux versions

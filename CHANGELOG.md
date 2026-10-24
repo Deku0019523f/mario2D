@@ -30,4 +30,4 @@
 - 105 tests unitaires/intégration + 29 vérifications e2e Playwright.
 
 ### Fichiers
-- Copie de l'original conservée dans `legacy/`.
+- Copie de l'original conservée dans `legacy/` (ZIP) ; les tests de parité sont ignorés explicitement si ce fichier est absent.
