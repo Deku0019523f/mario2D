@@ -32,7 +32,7 @@ export function generateScenery(world, levelLength, rng) {
         });
     }
 
-    // Relief lointain (couche de paralláxe supplémentaire, très en retrait)
+    // Relief lointain (couche de parallaxe supplémentaire, très en retrait)
     const farColors = [0x86d4b4, 0x9bdcc0, 0x7fcdb0];
     for (let x = -30; x < levelLength + 60; x += 22) {
         far.push({
