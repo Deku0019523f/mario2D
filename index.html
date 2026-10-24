@@ -16,8 +16,22 @@
     <link rel="stylesheet" href="./src/styles/main.css">
 
     <!-- Three.js r128 (npm: three@0.128.0). Le build de production (npm run build) embarque three dans le bundle. -->
-    <script type="importmap">
-    { "imports": { "three": "./node_modules/three/build/three.module.js" } }
+    <script>
+    /* Importmap dynamique : copie locale (npm install / npm run dev) si elle existe, sinon CDN (GitHub Pages, hébergement des sources). */
+    (function () {
+        var local = './node_modules/three/build/three.module.js';
+        var url = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js';
+        try {
+            var x = new XMLHttpRequest();
+            x.open('HEAD', local, false);
+            x.send();
+            if (x.status === 200) url = local;
+        } catch (e) { /* repli CDN */ }
+        var s = document.createElement('script');
+        s.type = 'importmap';
+        s.textContent = JSON.stringify({ imports: { three: url } });
+        document.head.appendChild(s);
+    })();
     </script>
 </head>
 <body>
